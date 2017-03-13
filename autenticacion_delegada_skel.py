@@ -3,7 +3,18 @@
 #
 # CABECERA AQUI
 #
-
+'''GIW
+   Practica de autenticación delegada
+   Grupo 13
+   Adrián Martínez Jiménez
+   Lucas Segarra Fernández
+   Declaramos que esta soluci´on
+   es fruto exclusivamente de nuestro trabajo personal. No hemos sido
+   ayudados por ninguna otra persona ni hemos obtenido la soluci´on de
+   fuentes externas, y tampoco hemos compartido nuestra soluci´on con
+   nadie. Declaramos adem´as que no hemos realizado de manera deshonesta
+   ninguna otra actividad que pueda mejorar nuestros resultados
+   ni perjudicar los resultados de los dem´as.'''
 
 from bottle import run, get, request, response
 # Resto de importaciones
@@ -38,7 +49,7 @@ def login_google():
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     response.set_cookie('state', state)
     p = "https://accounts.google.com/o/oauth2/v2/auth?client_id="+CLIENT_ID+"&response_type=code&scope=openid%20email&redirect_uri="+REDIRECT_URI+"&state="+state
-    return urllib2.urlopen(p)
+    return "<a href="+ p +" ><button>Pulse aquí para autenticar con google </button></a>" 
 
 @get('/token')
 def token():
