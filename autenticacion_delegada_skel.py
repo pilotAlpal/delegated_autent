@@ -16,7 +16,7 @@
    ninguna otra actividad que pueda mejorar nuestros resultados
    ni perjudicar los resultados de los dem´as.'''
 
-from bottle import run, get, request, response
+from bottle import run, get, request, response, route, post
 # Resto de importaciones
 
 import urllib2, urllib
@@ -42,9 +42,13 @@ DISCOVERY_DOC = "https://accounts.google.com/.well-known/openid-configuration"
 TOKEN_VALIDATION_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token"
 
 STATE =""
-    
+@post('/uploader')
+def uploader():
+    upload = request.files.get('uploadedfile')
+    upload.save(upload.filename)
+    return "<b>"+upload.filename+" </b>"
 
-@get('/login_google')
+@route('/')
 def login_google():
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     response.set_cookie('state', state)
@@ -61,7 +65,11 @@ def token():
         m = json.loads(m.read())
         p = urllib2.urlopen("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="+m['id_token'])
         p = json.loads(p.read())
-        return "<b>Bienvenido "+p['email']+"</b>"
+        return "<b>Bienvenido "+p['email']+'''</b>  <form enctype="multipart/form-data" action="uploader" method="POST">
+<input name="uploadedfile" type="file" />
+<input type="submit" value="Subir archivo" />
+</form> '''
+#quitar HTML con template
     else:
         return "<b>ERROR</b>"
 
